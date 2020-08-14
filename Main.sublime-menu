@@ -1,0 +1,23 @@
+[
+  {
+      "id": "tools", "children": [
+        {
+          "id" : "SipasteTools",
+          "caption" : "Sipaste Settings",
+          "command" : "sipaste",
+          "children":[
+            {
+              "id" : "UserSettings",
+              "caption" : "User settings",
+              "command" : "sipaste_user_settings"
+            },
+            {
+              "id" : "RestSettings",
+              "caption" : "Recovery set",
+              "command" : "sipaste_recovery_set"
+            }
+          ]
+        }
+      ]
+  }
+]
