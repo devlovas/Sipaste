@@ -2,6 +2,55 @@
 # -*- coding: UTF-8 -*-
 
 import os
+import sublime
+
+
+############################################################
+# Import external resources                                #
+############################################################
+
+from SipasteConst import CONFIG_FILE_NAME
+from SipasteConst import CONFIG_LIST_ARGS
+
+
+def load_settings(self):
+  """
+  将加载的配置值添至主类 params属性中
+
+  :return:
+  """
+
+  settings = sublime.load_settings(CONFIG_FILE_NAME)
+  for item in CONFIG_LIST_ARGS: self.params.update({ item: settings.get(item) })
+
+
+def initialize(fn):
+
+  """
+  加载程序所需的配置信息
+
+  :param fn: <function> run 函数
+  :retrun: <function> wrapper
+  """
+
+  def wrapper(*args, **kwargs):
+
+    """
+    加载程序所需的配置参数
+
+    :return: <any> fn => run func result
+    """
+    args[0].params = {}
+    load_settings(args[0])
+
+    args[0].file_path = os.path.dirname(args[0].view.file_name())       # 当前编辑的文件路径
+    args[0].file_name = os.path.basename(args[0].view.file_name())      # 当前编辑的文件名称
+
+    return fn(*args, **kwargs)  # 执行 "run"方法
+
+  return wrapper
+
+
 
 def copy_file(source_path, target_path, new_name=None, binary=True):
 
