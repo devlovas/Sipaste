@@ -1,5 +1,9 @@
 {
   "imageSavePath"  : "$filename",
 
+  "imageNameInfo"  : ["$basename", ["base64", 14]],
+
+  "imageTrashPath" : "trash bin",
+
   "imageExts"      : ["webp"]
 }
