@@ -3,6 +3,8 @@
 
   "imageNameInfo"  : ["$basename", ["base64", 14]],
 
+  "outputTemplate" : ["![Image Alt]($imagepath)",  "/", true],
+
   "imageTrashPath" : "trash bin",
 
   "imageExts"      : ["webp"]
