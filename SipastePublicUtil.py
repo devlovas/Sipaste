@@ -40,16 +40,21 @@ def initialize(fn):
 
     :return: <any> fn => run func result
     """
-    args[0].params = {}
-    load_settings(args[0])
 
-    args[0].file_path = os.path.dirname(args[0].view.file_name())       # 当前编辑的文件路径
-    args[0].file_name = os.path.basename(args[0].view.file_name())      # 当前编辑的文件名称
+    try:
 
-    args[0].image_name = args[0].get_image_name()    # 获取图片名称
-    args[0].image_path = args[0].get_image_path()    # 获取图片路径
+      args[0].params = {}
+      load_settings(args[0])
 
-    return fn(*args, **kwargs)  # 执行 "run"方法
+      args[0].file_path = os.path.dirname(args[0].view.file_name())       # 当前编辑的文件路径
+      args[0].file_name = os.path.basename(args[0].view.file_name())      # 当前编辑的文件名称
+
+      args[0].image_name = args[0].get_image_name()    # 获取图片名称
+      args[0].image_path = args[0].get_image_path()    # 获取图片路径
+
+      return fn(*args, **kwargs)  # 执行 "run"方法
+
+    except: pass
 
   return wrapper
 

@@ -104,13 +104,16 @@ def image_format_conversion(self, primary_file):
   :param primary_file: <string> 图片存储路径，带名称后缀
   :return:
   """
+  try:
 
-  handling = handling_method_image_type()
+    handling = handling_method_image_type()
 
-  for imageExt in self.params['imageExts']:
-    handling[imageExt](self, primary_file, primary_file+'.webp', primary_file+'.png')
+    for imageExt in self.params['imageExts']:
+      handling[imageExt](self, primary_file, primary_file+'.webp', primary_file+'.png')
 
-  os.remove(primary_file)
+    os.remove(primary_file)
+
+  except: pass
 
 
 

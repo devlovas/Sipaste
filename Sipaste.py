@@ -88,11 +88,12 @@ class SipasteCommand(sublime_plugin.TextCommand):
   @initialize
   def run(self, edit):
 
-    # 若当前非 Win32环境, 则执行Sublime中的原生paste功能
-    if sys.platform != "win32": return self.view.run_command('paste')
+    try:
 
-    # 检查剪贴板中是否存在图像, 若无图片则执行Sublime中的原生paste功能
-    if not IMAGETOOLS.isImageExists(): return self.view.run_command('paste')
+      # 若当前非 Win32环境或剪贴板中无图像数据,则执行 Sublime中的原生paste功能
+      if sys.platform != "win32" or not IMAGETOOLS.isImageExists(): raise
 
-    # 将图片保存到本地。 存储成功后在当前编辑的文档中光标处插入字符模板
-    save_image(self) and self.insert_string_template(edit)
+      # 将图片保存到本地。 存储成功后在当前编辑的文档中光标处插入字符模板
+      save_image(self) and self.insert_string_template(edit)
+
+    except: self.view.run_command('paste')
