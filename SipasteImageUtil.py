@@ -8,6 +8,13 @@ import base64
 import hashlib
 
 
+############################################################
+# Import external resources                                #
+############################################################
+
+from SipasteConst import IMAGETOOLS
+
+
 def get_image_name(self, _name = ''):
 
   """
@@ -61,3 +68,26 @@ def get_image_path(self):
   trash_path_list = parse_image_path(self, save_path_list[0], 'imageTrashPath')
 
   return [save_path_list, trash_path_list]
+
+
+def save_image(self):
+
+  """
+  将剪贴板中的图像保存到本地
+
+  :return: <boolean> Save the result of the image
+  """
+
+  image_save_path = os.path.join(self.image_path[0][0], self.image_name)    # 图片存储路径
+
+  if not os.path.exists(self.image_path[0][0]): os.makedirs(self.image_path[0][0])                              # 若指定路径不存在则进行路径创建
+  result_of_image_saving = IMAGETOOLS.saveImage( image_save_path[:image_save_path.rfind('.')].encode('gbk') )   # 将剪贴板中的图片保存到指定路径
+
+
+  # 若图片存储失败，则中断程序执行并向用户反馈其失败原因
+  if result_of_image_saving == 1: return sublime.error_message('Sipaste::  Error! The contents of the clipboard are not in DIB format ！')
+  if result_of_image_saving == 2: return sublime.error_message('Sipaste::  Error! Failed to open clipboard ！')
+  if result_of_image_saving == 3: return sublime.error_message('Sipaste::  Error! Path is not accessible ！')
+  if result_of_image_saving == 0: print('Sipaste:: Successful! image save address "%s"' % image_save_path)
+
+  return True
