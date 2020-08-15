@@ -12,7 +12,16 @@ ENV_PATH = os.path.dirname(os.path.realpath(__file__))
 not ENV_PATH in sys.path and sys.path.append(ENV_PATH)
 
 
+############################################################
+# Import external resources                                #
+############################################################
+
+from SipastePublicUtil import initialize
+
 class SipasteCommand(sublime_plugin.TextCommand):
 
+  @initialize
   def run(self, edit):
-    pass
+
+    import SipasteImageUtil as image
+    print(image.get_image_name(self))
