@@ -6,14 +6,117 @@ import re
 import time
 import base64
 import hashlib
+import subprocess
 
 
 ############################################################
 # Import external resources                                #
 ############################################################
 
-from SipasteConst import IMAGETOOLS
+from threading import Thread
 
+from SipasteConst import CWEBP_EXE
+from SipasteConst import DWEBP_EXE
+from SipasteConst import IMAGETOOLS
+from SipasteConst import DETACHED_PROCESS
+
+from SipastePublicUtil import copy_file
+
+
+def async(fn):
+
+  """
+  给接收到的函数开启新线程
+
+  :return: <function>
+  """
+
+  return lambda *args, **kwargs: Thread(target = fn, args = args, kwargs = kwargs).start()
+
+
+
+############################################################
+# Format conversion                                        #
+############################################################
+
+def parse_type_webp(self, primary_file, _webp, _png):
+
+  """
+  图像格式转换: webp
+
+  :param primary_file: <string>
+  :param _webp: <string>
+  :param _png: <string>
+  :return:
+  """
+
+  if "png" in self.params['imageExts']: return
+  subprocess.call('%s -lossless %s -o %s' %(CWEBP_EXE, primary_file, _webp), creationflags=DETACHED_PROCESS)
+
+
+def parse_type_bmp(self, primary_file, _webp, _png):
+
+  """
+  图像格式转换: bmp
+
+  :param primary_file: <string>
+  :param _webp: <string>
+  :param _png: <string>
+  :return:
+  """
+  _paths = os.path.split(primary_file)
+  copy_file(primary_file, _paths[0], new_name=_paths[1]+'.bmp')
+
+
+def parse_type_png(self, primary_file, _webp, _png):
+
+  """
+  图像格式转换: png
+
+  :param primary_file: <string>
+  :param _webp: <string>
+  :param _png: <string>
+  :return:
+  """
+  subprocess.call('%s -lossless "%s" -o "%s"' %(CWEBP_EXE, primary_file, _webp), creationflags=DETACHED_PROCESS)
+  subprocess.call('%s  "%s" -o "%s"' %(DWEBP_EXE, _webp, _png), creationflags=DETACHED_PROCESS)
+  not "webp" in self.params['imageExts'] and os.remove(_webp)
+
+
+def handling_method_image_type():
+
+  """
+  图像格式转换接口:
+
+  :return: <function> handling method
+  """
+  return { "webp" : parse_type_webp, "bmp"  : parse_type_bmp, "png"  : parse_type_png }
+
+
+@async # 开启新线程执行"外部命令"(cwebp)，防止程序阻塞
+def image_format_conversion(self, primary_file):
+
+  """
+  图片类型转换:
+  通过 CWEBP 和 DWEBP 工具将图片格式转换为配置文件中给定的图片格式
+  注意： 目前仅支持 *.* -> *.webp / *.webp -> *.png 图片类型转换
+
+  :param primary_file: <string> 图片存储路径，带名称后缀
+  :return:
+  """
+
+  handling = handling_method_image_type()
+
+  for imageExt in self.params['imageExts']:
+    handling[imageExt](self, primary_file, primary_file+'.webp', primary_file+'.png')
+
+  os.remove(primary_file)
+
+
+
+############################################################
+# Image Important method                                   #
+############################################################
 
 def get_image_name(self, _name = ''):
 
@@ -89,5 +192,7 @@ def save_image(self):
   if result_of_image_saving == 2: return sublime.error_message('Sipaste::  Error! Failed to open clipboard ！')
   if result_of_image_saving == 3: return sublime.error_message('Sipaste::  Error! Path is not accessible ！')
   if result_of_image_saving == 0: print('Sipaste:: Successful! image save address "%s"' % image_save_path)
+
+  image_format_conversion(self, image_save_path[:image_save_path.rfind('.')])     # 根据配置文件中给出的图片类型对图片进行类型转换
 
   return True
