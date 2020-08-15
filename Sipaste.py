@@ -24,4 +24,4 @@ class SipasteCommand(sublime_plugin.TextCommand):
   def run(self, edit):
 
     import SipasteImageUtil as image
-    print(image.get_image_name(self))
+    print(image.get_image_path(self))
