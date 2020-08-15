@@ -19,4 +19,4 @@ SET_FILE_BACKUP = os.path.join(ENV_PATH, CONFIG_FILE_NAME + '-backup')
 
 IMAGETOOLS = ctypes.CDLL(os.path.join(ENV_PATH,'lib','IMAGE_TOOLS.dll'))
 
-CONFIG_LIST_ARGS = ['imageSavePath', 'imageTrashPath', 'imageNameInfo', 'imageExts']
+CONFIG_LIST_ARGS = ['imageSavePath', 'imageTrashPath', 'imageNameInfo', 'outputTemplate', 'imageExts']
