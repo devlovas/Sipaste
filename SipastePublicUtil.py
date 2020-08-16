@@ -13,7 +13,21 @@ from SipasteConst import CONFIG_FILE_NAME
 from SipasteConst import CONFIG_LIST_ARGS
 
 
+def convert_path(path):
+
+  """
+  根据当前系统平台将路径中的分隔符
+  转换为当前系统所支持的路径分隔符
+
+  :param path: <string>
+  :return: <string> path
+  """
+
+  sep_path = r'\/'.replace(os.sep, '')
+  return path.replace(sep_path, os.sep) if sep_path in path else path
+
 def load_settings(self):
+
   """
   将加载的配置值添至主类 params属性中
 
@@ -80,5 +94,27 @@ def copy_file(source_path, target_path, new_name=None, binary=True):
       with open(target_path, 'wb' if binary else 'w') as ft: ft.write(fs.read())                         # 将文件移动到目标目录
 
     return True
+
+  except: return False
+
+
+def move_file(source_path, target_path, new_name=None, binary=True):
+
+  """
+  移动文件：
+
+  :param source_path: <string>  : 源文件路径
+  :param target_path: <string>  : 目标地路径
+  :param [binary (:True)]: <boolean>  : 文件是否以二进制方式打开
+  :param [new_name (:None)]: <string> : 指定新的名称，默认为源文件名
+  :return: <boolean> file move result
+  """
+
+  try:
+
+    result = copy_file(source_path, target_path, new_name, binary)
+    result = os.remove(source_path) if result else result                                                # 删除已拷贝的原始文件
+
+    return result is None
 
   except: return False
