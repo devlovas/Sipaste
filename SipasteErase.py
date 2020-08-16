@@ -74,6 +74,12 @@ class SipasteEraseCommand(sublime_plugin.TextCommand):
   def get_image_path(self): return get_image_path(self)
 
 
+  def revert_string_template(self, edit):
+    pass
+
+  def delete_string_template(self, edit):
+    pass
+
   @initialize
   def run(self, edit):
 
@@ -82,7 +88,7 @@ class SipasteEraseCommand(sublime_plugin.TextCommand):
       self.source_file = os.path.join(self.image_path[0][0], self.image_name)
       self.target_file = os.path.join(self.image_path[1][0], self.image_name)
 
-      print(self.source_file)
-      print(self.target_file)
+      if os.path.exists(self.source_file): self.delete_string_template(edit)
+      else: self.revert_string_template(edit)
 
     except: pass
