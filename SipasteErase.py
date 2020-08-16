@@ -19,6 +19,7 @@ not ENV_PATH in sys.path and sys.path.append(ENV_PATH)
 
 from SipasteImageUtil import get_image_path
 
+from SipastePublicUtil import move_file
 from SipastePublicUtil import initialize
 
 
@@ -78,7 +79,16 @@ class SipasteEraseCommand(sublime_plugin.TextCommand):
     pass
 
   def delete_string_template(self, edit):
-    pass
+
+    """
+    删除文档中已插入的字符串模板， 并将图片回收到指定目录下
+
+    :param edit: <object>
+    :return:
+    """
+
+    sel_result = sublime.ok_cancel_dialog('Sipaste:: You are moving this image to the trash bin. Do you want to continue?')
+    sel_result and move_file(self.source_file, self.image_path[1][0]) and self.view.erase(edit, self.view.sel()[0])
 
   @initialize
   def run(self, edit):

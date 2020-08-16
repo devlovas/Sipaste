@@ -112,7 +112,7 @@ def move_file(source_path, target_path, new_name=None, binary=True):
 
   try:
 
-    result = copy_file(source_path, target_path, binary, new_name)
+    result = copy_file(source_path, target_path, new_name, binary)
     result = os.remove(source_path) if result else result                                                # 删除已拷贝的原始文件
 
     return result is None
