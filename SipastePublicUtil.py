@@ -13,7 +13,21 @@ from SipasteConst import CONFIG_FILE_NAME
 from SipasteConst import CONFIG_LIST_ARGS
 
 
+def convert_path(path):
+
+  """
+  根据当前系统平台将路径中的分隔符
+  转换为当前系统所支持的路径分隔符
+
+  :param path: <string>
+  :return: <string> path
+  """
+
+  sep_path = r'\/'.replace(os.sep, '')
+  return path.replace(sep_path, os.sep) if sep_path in path else path
+
 def load_settings(self):
+
   """
   将加载的配置值添至主类 params属性中
 

@@ -21,6 +21,7 @@ from SipasteConst import IMAGETOOLS
 from SipasteConst import DETACHED_PROCESS
 
 from SipastePublicUtil import copy_file
+from SipastePublicUtil import convert_path
 
 
 def async(fn):
@@ -158,7 +159,7 @@ def parse_image_path(self, _path, type):
   abs_save_path = os.sep.join(file_path[:len(file_path) - rel_save_path.count('../')])    # 以当前给出的路径作为参考计算该路径的相对地址
   abs_save_path = os.path.join(abs_save_path, rel_save_path.replace('../', ''))           # 按配置中给出的路径与计算得到的相对地址进行拼接，得绝对存储路径
 
-  return [abs_save_path, rel_save_path]
+  return [convert_path(abs_save_path), convert_path(rel_save_path)]
 
 
 def get_image_path(self):
