@@ -76,7 +76,17 @@ class SipasteEraseCommand(sublime_plugin.TextCommand):
 
 
   def revert_string_template(self, edit):
-    pass
+
+    """
+    恢复字符串模板中的图片， 将图片还原到原始目录下
+
+    :param edit: <object>
+    :return:
+    """
+
+    sel_result = os.path.exists(self.target_file) and sublime.ok_cancel_dialog('Sipaste:: You are restoring the image in the trash, Do you want to continue?')
+    move_file(self.target_file, self.image_path[0][0]) if sel_result else self.view.erase(edit, self.view.sel()[0])
+
 
   def delete_string_template(self, edit):
 
@@ -89,6 +99,7 @@ class SipasteEraseCommand(sublime_plugin.TextCommand):
 
     sel_result = sublime.ok_cancel_dialog('Sipaste:: You are moving this image to the trash bin. Do you want to continue?')
     sel_result and move_file(self.source_file, self.image_path[1][0]) and self.view.erase(edit, self.view.sel()[0])
+
 
   @initialize
   def run(self, edit):
