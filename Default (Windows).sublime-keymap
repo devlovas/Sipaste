@@ -1,3 +1,4 @@
 [
-  {"keys": ["ctrl+v"], "command": "sipaste"}
+  {"keys": ["ctrl+v"], "command": "sipaste"},
+  {"keys": ["alt+shift+delete"], "command": "sipaste_erase"}
 ]
