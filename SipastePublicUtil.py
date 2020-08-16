@@ -96,3 +96,25 @@ def copy_file(source_path, target_path, new_name=None, binary=True):
     return True
 
   except: return False
+
+
+def move_file(source_path, target_path, new_name=None, binary=True):
+
+  """
+  移动文件：
+
+  :param source_path: <string>  : 源文件路径
+  :param target_path: <string>  : 目标地路径
+  :param [binary (:True)]: <boolean>  : 文件是否以二进制方式打开
+  :param [new_name (:None)]: <string> : 指定新的名称，默认为源文件名
+  :return: <boolean> file move result
+  """
+
+  try:
+
+    result = copy_file(source_path, target_path, binary, new_name)
+    result = os.remove(source_path) if result else result                                                # 删除已拷贝的原始文件
+
+    return result is None
+
+  except: return False
